@@ -83,3 +83,28 @@ of three probability routines:
 `test.sh` exercises the CLI: it prints the help text and runs a handful of
 representative combinations (`yams_4`, `four_4`, `straight_6`, and both a
 failing and a satisfied `full_2_3`) to sanity-check the output.
+
+`test_201yams.py` is a pytest suite (run with `python -m pytest
+test_201yams.py -v`) that invokes the script as a subprocess and covers the
+README examples above, boundary die/combination values, and malformed input
+(missing args, out-of-range dice, bad combination strings).
+
+### Fixed bug
+
+`argument_parsing_find_error` accepted `0` as a valid combination face digit
+(e.g. `pair_0`, `full_0_2`), even though `0` is reserved to mean "die not
+thrown yet" and the documented pattern range is 1-6. This let `pair_0` (and
+similarly `three_0`/`four_0`/`yams_0`/`full_0_B`) slip past validation and
+print a nonsensical result like `chances to get a 0 pair:  100.00%`. Fixed
+by requiring the combination's face digit(s) to be in `1-6` instead of
+`0-6`.
+
+### Known issue (not fixed)
+
+`full_A_B` accepts `A == B` (e.g. `full_2_2`), a combination that's
+impossible in real Yams (a full house needs two *different* face values),
+and still computes a spurious non-zero probability for it instead of
+rejecting the input. Fixing this requires deciding new validation semantics
+(reject `A == B`) that aren't specified anywhere in the existing code, so it
+is left as a known issue — see the `xfail`-marked test in
+`test_201yams.py`.

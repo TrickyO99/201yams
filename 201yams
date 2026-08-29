@@ -56,14 +56,14 @@ def argument_parsing_find_error(argv):
         idx_B = pattern.find('B')
 
         try:
-            if 0 <= int(argv[-1][idx_A]) <= 6:
+            if 1 <= int(argv[-1][idx_A]) <= 6:
                 pass
             else:
                 continue
             pattern = pattern.replace('A', argv[-1][idx_A])
 
             if idx_B != -1:
-                if 0 <= int(argv[-1][idx_B]) <= 6:
+                if 1 <= int(argv[-1][idx_B]) <= 6:
                     pass
                 else:
                     continue
